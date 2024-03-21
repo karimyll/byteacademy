@@ -34,4 +34,19 @@ public interface TeacherMapper {
         }
     }
 
+    @AfterMapping
+    default void mapCoursesForUpdate(UpdateTeacherDTO teacherDTO, @MappingTarget TeacherEntity teacherEntity) {
+        if (teacherDTO.getCourseId() != null) {
+            List<CourseEntity> courseEntities = teacherDTO.getCourseId().stream()
+                    .map(courseId -> {
+                        CourseEntity courseEntity = new CourseEntity();
+                        courseEntity.setId(courseId);
+                        return courseEntity;
+                    })
+                    .collect(Collectors.toList());
+
+            teacherEntity.setCourse(courseEntities);
+        }
+    }
+
 }

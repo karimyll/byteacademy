@@ -28,6 +28,7 @@ public class CourseController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public void add(@RequestBody @Valid CourseDTO courseDTO){
         courseService.add(courseDTO);
     }

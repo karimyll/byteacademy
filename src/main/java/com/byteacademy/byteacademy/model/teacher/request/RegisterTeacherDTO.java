@@ -1,9 +1,11 @@
 package com.byteacademy.byteacademy.model.teacher.request;
 
 import com.byteacademy.byteacademy.model.auth.RoleDTO;
+import com.byteacademy.byteacademy.model.course.request.CourseDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +15,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class RegisterTeacherDTO {
     private String name;
     private String surname;
