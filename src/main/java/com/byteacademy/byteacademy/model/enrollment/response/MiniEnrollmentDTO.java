@@ -13,13 +13,10 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EnrollmentDTO {
+public class MiniEnrollmentDTO {
     private Long id;
     private MiniStudentDTO student;
     private TitleCourseDTO course;
-    private MiniTeacherDTO teacher;
-    private ResponseGroupDTO group;
     private LocalDate startDate;
     private LocalDate endDate;
-    private boolean cancelled;
 }
