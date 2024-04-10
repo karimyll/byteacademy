@@ -1,15 +1,17 @@
 package com.byteacademy.byteacademy.service.interfaces;
 
-import com.byteacademy.byteacademy.model.teacher.request.RegisterTeacherDTO;
-import com.byteacademy.byteacademy.model.teacher.request.UpdateTeacherDTO;
-import com.byteacademy.byteacademy.model.teacher.response.DetailedTeacherDTO;
-import com.byteacademy.byteacademy.model.teacher.response.MiniTeacherDTO;
+import com.byteacademy.byteacademy.model.RequestUpdateTeacherDTO;
+import com.byteacademy.byteacademy.model.TeacherDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface TeacherService {
-    Page<MiniTeacherDTO> getAllList(Pageable pageable);
-    DetailedTeacherDTO getByUsername(String username);
-    void add(RegisterTeacherDTO registerTeacherDTO);
-    void update(Long id, UpdateTeacherDTO updateTeacherDTO);
+    Page<TeacherDTO> getAllList(Pageable pageable);
+    TeacherDTO getByUsername(String username);
+    List<TeacherDTO> getByCourseId(Long courseId);
+    TeacherDTO add(TeacherDTO registerTeacherDTO, HttpServletRequest request);
+    void update(Long id, RequestUpdateTeacherDTO updateTeacherDTO, HttpServletRequest request);
 }

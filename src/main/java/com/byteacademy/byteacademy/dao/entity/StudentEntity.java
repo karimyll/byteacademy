@@ -20,6 +20,7 @@ public class StudentEntity {
     private String name;
     private String surname;
     private String fatherName;
+    @Column(unique = true, nullable = false)
     private String username;
     private LocalDate birthDate;
     @Enumerated(EnumType.STRING)

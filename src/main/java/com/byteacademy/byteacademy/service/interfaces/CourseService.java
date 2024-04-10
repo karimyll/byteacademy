@@ -1,16 +1,18 @@
 package com.byteacademy.byteacademy.service.interfaces;
 
-import com.byteacademy.byteacademy.model.course.request.CourseDTO;
-import com.byteacademy.byteacademy.model.course.response.ClientCourseFullDTO;
-import com.byteacademy.byteacademy.model.course.response.ClientCourseListDTO;
+import com.byteacademy.byteacademy.model.CourseDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface CourseService {
-    Page<ClientCourseListDTO> getAllList(Pageable pageable);
-    ClientCourseFullDTO getCourseBySlug(String slug);
-    void add(CourseDTO courseDTO);
-    void update(Long id, CourseDTO courseDTO);
-    void delete(Long id);
+    Page<CourseDTO> getAllList(Pageable pageable);
+    CourseDTO getBySlug(String slug);
+    List<CourseDTO> getByTeacherId(Long teacherId);
+    CourseDTO add(CourseDTO courseDTO, HttpServletRequest request);
+    void update(Long id, CourseDTO courseDTO, HttpServletRequest request);
+    void delete(Long id, HttpServletRequest request);
 
 }

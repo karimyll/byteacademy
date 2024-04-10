@@ -1,9 +1,9 @@
 package com.byteacademy.byteacademy.controller;
 
-import com.byteacademy.byteacademy.model.student.request.RegisterStudentDTO;
-import com.byteacademy.byteacademy.model.student.request.UpdateStudentDTO;
-import com.byteacademy.byteacademy.model.student.response.FullStudentDTO;
+import com.byteacademy.byteacademy.model.RequestUpdateStudentDTO;
+import com.byteacademy.byteacademy.model.StudentDTO;
 import com.byteacademy.byteacademy.service.interfaces.StudentService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,27 +13,28 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/student")
+@RequestMapping("/api/v1/students")
 public class StudentController {
     private final StudentService service;
+
     @GetMapping
-    public Page<FullStudentDTO> getAllStudents(Pageable pageable){
-        return service.getAllStudents(pageable);
+    public Page<StudentDTO> getAllStudents(Pageable pageable, HttpServletRequest request){
+        return service.getAllStudents(pageable, request);
     }
 
     @GetMapping("/{username}")
-    public FullStudentDTO getByUsername(@PathVariable String username){
-        return service.getByUsername(username);
+    public StudentDTO getByUsername(@PathVariable String username, HttpServletRequest request){
+        return service.getByUsername(username, request);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void add(@RequestBody @Valid RegisterStudentDTO registerStudentDTO){
-        service.add(registerStudentDTO);
+    public StudentDTO add(@RequestBody @Valid StudentDTO registerStudentDTO, HttpServletRequest request){
+        return service.add(registerStudentDTO, request);
     }
 
     @PutMapping("/{id}")
-    public void update(@PathVariable Long id, @RequestBody @Valid UpdateStudentDTO updateStudentDTO){
-        service.update(id, updateStudentDTO);
+    public void update(@PathVariable Long id, @RequestBody RequestUpdateStudentDTO updateStudentDTO, HttpServletRequest request){
+        service.update(id, updateStudentDTO, request);
     }
 }

@@ -1,5 +1,6 @@
 package com.byteacademy.byteacademy.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import static org.springframework.http.HttpMethod.*;
 
 @Configuration
 @EnableWebSecurity
@@ -25,39 +28,52 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers(permitSwagger).permitAll()
-                                .requestMatchers("/api/v1/**").permitAll()
-//                                .requestMatchers("/api/v1/auth/login").permitAll()
-//                                .requestMatchers("/api/v1/applications/public/**").permitAll()
-//                                .requestMatchers("/api/v1/applications/admin/**").hasAnyRole("ADMIN")
-//                                .requestMatchers("/api/v1/blogs/public/**").permitAll()
-//                                .requestMatchers("/api/v1/blogs/teacher/**").hasAnyRole(TEACHER)
-//                                .requestMatchers("/api/v1/courses/public").permitAll()
-//                                .requestMatchers("/api/v1/courses/admin").hasAnyRole("ADMIN")
-//                                .requestMatchers("/api/v1/students/admin").hasAnyRole("ADMIN")
-//                                .requestMatchers("/api/v1/students/student").hasAnyRole(STUDENT)
-//                                .requestMatchers("/api/v1/teachers/public").permitAll()
-//                                .requestMatchers("/api/v1/teachers/teacher").hasAnyRole(TEACHER)
-//                                .requestMatchers("/api/v1/teachers/admin").hasAnyRole("ADMIN")
-
-                                .anyRequest().authenticated());
+                                .requestMatchers("/api/v1/auth/login").permitAll()
+                                .requestMatchers("/api/v1/certificates").hasAnyRole(STAFF)
+                                .requestMatchers("/api/v1/certificates/{id}").hasAnyRole(STAFF)
+                                .requestMatchers("/api/v1/certificates/no/{verificationNo}").permitAll()
+                                .requestMatchers(GET, "/api/v1/courses/**").permitAll()
+                                .requestMatchers("/api/v1/courses/**").hasAnyRole(STAFF)
+                                .requestMatchers("/api/v1/enrollments/**").hasAnyRole(STAFF)
+                                .requestMatchers("/api/v1/groups").hasAnyRole(STAFF)
+                                .requestMatchers("/api/v1/students").hasAnyRole(STAFF)
+                                .requestMatchers(PUT, "/api/v1/students").hasAnyRole("STAFF", "STUDENT", "ADMIN")
+                                .requestMatchers(GET,"/api/v1/teachers").permitAll()
+                                .requestMatchers(POST,"/api/v1/teachers/**").hasAnyRole(STAFF)
+                                .requestMatchers(PUT,"/api/v1/teachers/**").hasAnyRole("STAFF", "TEACHER", "ADMIN")
+                                .anyRequest().authenticated()
+                )
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint((request, response, authException) ->
+                                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED)
+                        )
+                        .accessDeniedHandler((request, response, accessDeniedException) ->
+                                response.setStatus(HttpServletResponse.SC_FORBIDDEN)
+                        )
+                );
         http.authenticationProvider(authenticationProvider);
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    public static String[] TEACHER = {
+    protected static String[] TEACHER = {
             "TEACHER",
             "ADMIN"
     };
 
-    public static String[] STUDENT = {
+    protected static String[] STUDENT = {
             "STUDENT",
             "ADMIN"
     };
 
+    protected static String[] STAFF = {
+            "STAFF",
+            "ADMIN"
+    };
 
-    public static String[] permitSwagger = {
+
+    protected static String[] permitSwagger = {
             "v3/api-docs/**",
             "v3/api-docs.yaml",
             "swagger-ui/**",

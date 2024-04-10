@@ -1,22 +1,46 @@
 package com.byteacademy.byteacademy.mapper;
 
-import com.byteacademy.byteacademy.dao.entity.CertificateEntity;
-import com.byteacademy.byteacademy.dao.entity.CourseEntity;
-import com.byteacademy.byteacademy.dao.entity.EnrollmentEntity;
-import com.byteacademy.byteacademy.model.certificate.request.RegisterCertificateDTO;
-import com.byteacademy.byteacademy.model.certificate.response.FullCertificateDTO;
-import com.byteacademy.byteacademy.model.certificate.response.MiniCertificateDTO;
+import com.byteacademy.byteacademy.dao.entity.*;
+import com.byteacademy.byteacademy.model.*;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface CertificateMapper {
 
     @Mapping(target = "enrollment", source = "enrollmentId", qualifiedByName = "toEnrollmentEntity")
-    CertificateEntity mapToEntity(RegisterCertificateDTO registerCertificateDTO);
+    CertificateEntity mapToEntity(CertificateDTO certificateDTO);
 
-    FullCertificateDTO mapToFullDTO(CertificateEntity certificateEntity);
-    MiniCertificateDTO mapToMiniDTO(CertificateEntity certificateEntity);
-    CertificateEntity mapToUpdateEntity(@MappingTarget CertificateEntity certificateEntity, RegisterCertificateDTO certificateDTO);
+    @Mapping(target = "enrollment" ,ignore = true)
+    CertificateDTO mapToResponse(CertificateEntity certificateEntity);
+
+    CertificateEntity mapToUpdateEntity(@MappingTarget CertificateEntity certificateEntity, CertificateDTO certificateDTO);
+
+    CertificateDTO mapToFullResponse(CertificateEntity certificateEntity);
+
+    default StudentDTO studentEntityToStudentDTO(StudentEntity studentEntity) {
+        StudentDTO studentDTO = new StudentDTO();
+        studentDTO.setName( studentEntity.getName() );
+        studentDTO.setSurname( studentEntity.getSurname() );
+        return studentDTO;
+    }
+
+    default CourseDTO courseEntityToCourseDTO(CourseEntity courseEntity) {
+        CourseDTO courseDTO = new CourseDTO();
+        courseDTO.setTitle( courseEntity.getTitle() );
+        return courseDTO;
+    }
+
+    default TeacherDTO teacherEntityToTeacherDTO(TeacherEntity teacherEntity) {
+        TeacherDTO teacherDTO = new TeacherDTO();
+        teacherDTO.setName( teacherEntity.getName() );
+        teacherDTO.setSurname( teacherEntity.getSurname() );
+        return teacherDTO;
+    }
+
+    default GroupDTO groupEntityToGroupDTO(GroupEntity groupEntity) {
+        return new GroupDTO();
+    }
+
 
     @Named("toEnrollmentEntity")
     default EnrollmentEntity toEnrollmentEntity(Long enrollmentId) {

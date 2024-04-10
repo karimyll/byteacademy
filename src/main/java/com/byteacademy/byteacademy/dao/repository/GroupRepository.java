@@ -7,5 +7,4 @@ import java.util.Optional;
 
 public interface GroupRepository extends JpaRepository<GroupEntity, Long> {
     Optional<GroupEntity> findByNumber(Long number);
-    Boolean existsByNumber(Long number);
 }

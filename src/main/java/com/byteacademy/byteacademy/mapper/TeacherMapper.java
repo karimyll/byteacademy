@@ -2,25 +2,26 @@ package com.byteacademy.byteacademy.mapper;
 
 import com.byteacademy.byteacademy.dao.entity.CourseEntity;
 import com.byteacademy.byteacademy.dao.entity.TeacherEntity;
-import com.byteacademy.byteacademy.model.teacher.request.RegisterTeacherDTO;
-import com.byteacademy.byteacademy.model.teacher.request.UpdateTeacherDTO;
-import com.byteacademy.byteacademy.model.teacher.response.DetailedTeacherDTO;
-import com.byteacademy.byteacademy.model.teacher.response.MiniTeacherDTO;
+import com.byteacademy.byteacademy.model.RequestUpdateTeacherDTO;
+import com.byteacademy.byteacademy.model.TeacherDTO;
 import org.mapstruct.*;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface TeacherMapper {
-    MiniTeacherDTO mapToMiniDTO(TeacherEntity teacher);
-    DetailedTeacherDTO mapToDetailedDTO(TeacherEntity teacher);
-    TeacherEntity mapToEntity(RegisterTeacherDTO registerTeacherDTO);
-    TeacherEntity mapUpdateToEntity(@MappingTarget TeacherEntity teacher, UpdateTeacherDTO updateTeacherDTO);
+
+    TeacherEntity mapToEntity(TeacherDTO teacherDTO);
+    TeacherEntity mapUpdateToEntity(@MappingTarget TeacherEntity teacher, RequestUpdateTeacherDTO updateTeacherDTO);
+
+    @Mapping(target = "password", ignore = true)
+    @Mapping(target = "courseId", ignore = true)
+    @Mapping(target = "roles", ignore = true)
+    TeacherDTO mapToResponse(TeacherEntity teacher);
+
 
     @AfterMapping
-    default void mapCourses(RegisterTeacherDTO teacherDTO, @MappingTarget TeacherEntity teacherEntity) {
+    default void mapCourses(TeacherDTO teacherDTO, @MappingTarget TeacherEntity teacherEntity) {
         if (teacherDTO.getCourseId() != null) {
             List<CourseEntity> courseEntities = teacherDTO.getCourseId().stream()
                     .map(courseId -> {
@@ -28,14 +29,14 @@ public interface TeacherMapper {
                         courseEntity.setId(courseId);
                         return courseEntity;
                     })
-                    .collect(Collectors.toList());
+                    .toList();
 
             teacherEntity.setCourse(courseEntities);
         }
     }
 
     @AfterMapping
-    default void mapCoursesForUpdate(UpdateTeacherDTO teacherDTO, @MappingTarget TeacherEntity teacherEntity) {
+    default void mapCoursesForUpdate(RequestUpdateTeacherDTO teacherDTO, @MappingTarget TeacherEntity teacherEntity) {
         if (teacherDTO.getCourseId() != null) {
             List<CourseEntity> courseEntities = teacherDTO.getCourseId().stream()
                     .map(courseId -> {
@@ -43,7 +44,7 @@ public interface TeacherMapper {
                         courseEntity.setId(courseId);
                         return courseEntity;
                     })
-                    .collect(Collectors.toList());
+                    .toList();
 
             teacherEntity.setCourse(courseEntities);
         }

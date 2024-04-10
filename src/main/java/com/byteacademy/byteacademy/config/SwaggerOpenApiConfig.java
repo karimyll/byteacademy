@@ -20,7 +20,6 @@ public class SwaggerOpenApiConfig {
 
     @Bean
     public OpenAPI springOpenAPI() {
-        final String securitySchemeName = "bearerAuth";
         return new OpenAPI()
                 .info(new Info().title("ByteBridge Academy API")
                         .description("Final Matrix Project")

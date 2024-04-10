@@ -1,9 +1,8 @@
 package com.byteacademy.byteacademy.controller;
 
-import com.byteacademy.byteacademy.model.certificate.request.RegisterCertificateDTO;
-import com.byteacademy.byteacademy.model.certificate.response.FullCertificateDTO;
-import com.byteacademy.byteacademy.model.certificate.response.MiniCertificateDTO;
+import com.byteacademy.byteacademy.model.CertificateDTO;
 import com.byteacademy.byteacademy.service.interfaces.CertificateService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,40 +11,36 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/certificate")
+@RequestMapping("/api/v1/certificates")
 @RequiredArgsConstructor
 public class CertificateController {
     private final CertificateService service;
 
     @GetMapping
-    public Page<MiniCertificateDTO> getAllList(Pageable pageable){
-        return service.getAllList(pageable);
-    }
-
-    @GetMapping("/full")
-    public Page<FullCertificateDTO> getFullList(Pageable pageable){
-        return service.getFullList(pageable);
+    public Page<CertificateDTO> getAllList(Pageable pageable, HttpServletRequest request){
+        return service.getAllList(pageable ,request);
     }
 
     @GetMapping("/no/{verificationNo}")
-    public FullCertificateDTO getByVerificationNo(@PathVariable String verificationNo){
+    public CertificateDTO getByVerificationNo(@PathVariable String verificationNo){
         return service.getByVerificationNo(verificationNo);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void add(@RequestBody @Valid RegisterCertificateDTO registerCertificateDTO){
-        service.add(registerCertificateDTO);
+    public CertificateDTO add(@RequestBody @Valid CertificateDTO certificateDTO, HttpServletRequest request){
+        service.add(certificateDTO, request);
+        return certificateDTO;
     }
 
     @PutMapping("/{id}")
-    public void update(@PathVariable Long id, @RequestBody RegisterCertificateDTO certificateDTO){
-        service.update(id, certificateDTO);
+    public void update(@PathVariable Long id, @RequestBody CertificateDTO certificateDTO, HttpServletRequest request){
+        service.update(id, certificateDTO, request);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable Long id){
-        service.deleteById(id);
+    public void deleteById(@PathVariable Long id, HttpServletRequest request){
+        service.deleteById(id, request);
     }
 }

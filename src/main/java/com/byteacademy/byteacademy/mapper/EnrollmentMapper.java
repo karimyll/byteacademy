@@ -1,21 +1,27 @@
 package com.byteacademy.byteacademy.mapper;
 
 import com.byteacademy.byteacademy.dao.entity.*;
-import com.byteacademy.byteacademy.model.enrollment.request.RegisterEnrollmentDTO;
-import com.byteacademy.byteacademy.model.enrollment.request.UpdateEnrollmentDTO;
-import com.byteacademy.byteacademy.model.enrollment.response.EnrollmentDTO;
+import com.byteacademy.byteacademy.model.*;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface EnrollmentMapper {
+
     @Mapping(target = "course", source = "courseId", qualifiedByName = "toCourseEntity")
     @Mapping(target = "student", source = "studentId", qualifiedByName = "toStudentEntity")
     @Mapping(target = "teacher", source = "teacherId", qualifiedByName = "toTeacherEntity")
     @Mapping(target = "group", source = "groupId", qualifiedByName = "toGroupEntity")
-    EnrollmentEntity mapToEntity(RegisterEnrollmentDTO enrollmentDTO);
-    EnrollmentDTO mapToDTO(EnrollmentEntity enrollmentEntity);
+    EnrollmentEntity mapToEntity(EnrollmentDTO enrollmentDTO);
+
     EnrollmentEntity mapToUpdateDTO(@MappingTarget EnrollmentEntity enrollmentEntity,
-                                    UpdateEnrollmentDTO updateEnrollmentDTO);
+                                    RequestUpdateEnrollmentDTO updateEnrollmentDTO);
+
+    @Mapping(target = "student" , ignore = true)
+    @Mapping(target = "course", ignore = true)
+    @Mapping(target = "teacher", ignore = true)
+    @Mapping(target = "group", ignore = true)
+    EnrollmentDTO mapToResponseDTO(EnrollmentEntity enrollmentEntity);
+    EnrollmentDTO mapToFullResponseDTO(EnrollmentEntity enrollmentEntity);
 
 
     @Named("toCourseEntity")

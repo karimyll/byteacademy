@@ -4,6 +4,7 @@ import com.byteacademy.byteacademy.exception.EntityExistException;
 import com.byteacademy.byteacademy.exception.EntityNotFoundException;
 import com.byteacademy.byteacademy.model.ExceptionDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
@@ -29,18 +30,24 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityExistException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ExceptionDTO handleNotFound(EntityExistException entityExistException){
-        log.error("ActionLog.error not found: {} ", entityExistException.getMessage());
+    public ExceptionDTO handleExist(EntityExistException entityExistException){
+        log.error("ActionLog.error entity exist: {} ", entityExistException.getMessage());
         return new ExceptionDTO(HttpStatus.CONFLICT.value(), entityExistException.getMessage());
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ExceptionDTO handleDataIntegrityViolationException(DataIntegrityViolationException dataIntegrityViolationException){
+        log.error("ActionLog.error integrity violation: {} ", dataIntegrityViolationException.getMessage());
+        return new ExceptionDTO(HttpStatus.CONFLICT.value(), dataIntegrityViolationException.getMessage());
+    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
+        ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);

@@ -1,4 +1,4 @@
-package com.byteacademy.byteacademy.model.teacher.request;
+package com.byteacademy.byteacademy.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateTeacherDTO {
+public class RequestUpdateTeacherDTO {
     private String name;
     private String surname;
     private String imageUrl;

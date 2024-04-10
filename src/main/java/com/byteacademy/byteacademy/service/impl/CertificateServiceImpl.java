@@ -1,69 +1,70 @@
 package com.byteacademy.byteacademy.service.impl;
 
 import com.byteacademy.byteacademy.dao.repository.CertificateRepository;
-import com.byteacademy.byteacademy.exception.EntityExistException;
 import com.byteacademy.byteacademy.exception.EntityNotFoundException;
 import com.byteacademy.byteacademy.mapper.CertificateMapper;
-import com.byteacademy.byteacademy.model.certificate.request.RegisterCertificateDTO;
-import com.byteacademy.byteacademy.model.certificate.response.FullCertificateDTO;
-import com.byteacademy.byteacademy.model.certificate.response.MiniCertificateDTO;
+import com.byteacademy.byteacademy.model.CertificateDTO;
 import com.byteacademy.byteacademy.service.interfaces.CertificateService;
+import com.byteacademy.byteacademy.utility.ExtractorHelper;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CertificateServiceImpl implements CertificateService {
     private final CertificateRepository repository;
     private final CertificateMapper mapper;
+    private final ExtractorHelper extractorHelper;
 
-    @Override
-    public Page<MiniCertificateDTO> getAllList(Pageable pageable) {
-        return repository.findAll(pageable).map(mapper::mapToMiniDTO);
+    public String username(HttpServletRequest request) {
+        return extractorHelper.extractUsername(request);
     }
 
     @Override
-    public Page<FullCertificateDTO> getFullList(Pageable pageable) {
-        return repository.findAll(pageable).map(mapper::mapToFullDTO);
+    public Page<CertificateDTO> getAllList(Pageable pageable, HttpServletRequest request) {
+        log.info("Certificate get all list service used by username: {}", username(request));
+        return repository.findAll(pageable).map(mapper::mapToResponse);
     }
 
     @Override
-    public FullCertificateDTO getByVerificationNo(String verificationNo) {
+    public CertificateDTO getByVerificationNo(String verificationNo) {
+        log.info("Certificate get by verification no: {}", verificationNo);
         var certificate = repository.findByVerificationNo(verificationNo).orElseThrow(
                 () -> new EntityNotFoundException("CERTIFICATE_NOT_FOUND")
         );
 
-        return mapper.mapToFullDTO(certificate);
+        return mapper.mapToFullResponse(certificate);
     }
 
     @Override
-    public void add(RegisterCertificateDTO registerCertificateDTO) {
-        var check = repository.existsByVerificationNo(registerCertificateDTO.getVerificationNo());
-        if (check){
-            throw new EntityExistException("CERTIFICATE_WITH_THIS_NO_IS_ALREADY_EXISTS");
-        }else{
-            repository.save(mapper.mapToEntity(registerCertificateDTO));
-        }
+    public CertificateDTO add(CertificateDTO certificateDTO, HttpServletRequest request) {
+        log.info("Certificate add service started by username: {}", username(request));
+        repository.save(mapper.mapToEntity(certificateDTO));
+        log.info("Certificate add service finished by username: {}", username(request));
+        return certificateDTO;
     }
 
     @Override
-    public void update(Long id, RegisterCertificateDTO certificateDTO) {
+    public void update(Long id, CertificateDTO certificateDTO, HttpServletRequest request) {
+        log.info("Certificate update service started by username: {}, id: {}", username(request), id);
         var certificate = repository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("CERTIFICATE_NOT_FOUND")
         );
 
         repository.save(mapper.mapToUpdateEntity(certificate, certificateDTO));
+
+        log.info("Certificate update service finished by username: {}", username(request));
     }
 
     @Override
-    public void deleteById(Long id) {
-        var check = repository.existsById(id);
-        if (check){
-            repository.deleteById(id);
-        }else {
-            throw new EntityNotFoundException("CERTIFICATE_NOT_FOUND");
-        }
+    public void deleteById(Long id, HttpServletRequest request) {
+        log.info("Certificate delete service started by username: {}, id: {}", username(request), id);
+        repository.deleteById(id);
+        log.info("Certificate delete service finished by username: {}, id : {}", username(request), id);
     }
 }

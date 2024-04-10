@@ -1,4 +1,4 @@
-package com.byteacademy.byteacademy.model.enrollment.request;
+package com.byteacademy.byteacademy.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class UpdateEnrollmentDTO {
+@NoArgsConstructor
+public class RequestUpdateEnrollmentDTO {
     private Long courseId;
     private Long teacherId;
     private Long groupId;

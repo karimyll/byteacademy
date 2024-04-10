@@ -14,6 +14,7 @@ public class CertificateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true, nullable = false)
     private String verificationNo;
     private Double point;
     @OneToOne

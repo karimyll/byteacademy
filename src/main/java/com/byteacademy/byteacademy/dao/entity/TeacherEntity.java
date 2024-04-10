@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "teacher")
@@ -19,6 +18,7 @@ public class TeacherEntity {
     private Long id;
     private String name;
     private String surname;
+    @Column(unique = true, nullable = false)
     private String username;
     private String job;
     private String about;
