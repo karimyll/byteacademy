@@ -5,19 +5,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
-@Table(name = "certificate")
+@Table(name = "category")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CertificateEntity {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true, nullable = false)
-    private String verificationNo;
-    private Double point;
-    @OneToOne
-    @JoinColumn(name = "enrollment_id")
-    private EnrollmentEntity enrollment;
+    private String title;
+    private String slug;
+    @OneToMany(mappedBy = "category")
+    private List<Course> courses;
 }

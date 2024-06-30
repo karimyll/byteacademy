@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder
-public class CourseEntity {
+public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,8 +24,8 @@ public class CourseEntity {
     private Integer duration;
     private String format;
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private CategoryEntity category;
+    private Category category;
     @ManyToMany(mappedBy = "course")
-    private List<TeacherEntity> teachers;
+    private List<Teacher> teachers;
 
 }

@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EnrollmentEntity {
+public class Enrollment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -20,19 +20,19 @@ public class EnrollmentEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
-    private CourseEntity course;
+    private Course course;
 
     @ManyToOne
     @JoinColumn(name = "student_id")
-    private StudentEntity student;
+    private Student student;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_id")
-    private TeacherEntity teacher;
+    private Teacher teacher;
 
     @ManyToOne
     @JoinColumn(name = "group_id")
-    private GroupEntity group;
+    private Group group;
 
     @Column(name = "start_date")
     private LocalDate startDate;

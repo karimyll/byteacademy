@@ -1,6 +1,6 @@
 package com.byteacademy.byteacademy.mapper;
 
-import com.byteacademy.byteacademy.dao.entity.CourseEntity;
+import com.byteacademy.byteacademy.dao.entity.Course;
 import com.byteacademy.byteacademy.model.CourseDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -10,13 +10,13 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface CourseMapper {
     @Mapping(target = "teacherId", ignore = true)
-    CourseDTO mapToFullDTO(CourseEntity course);
+    CourseDTO mapToFullDTO(Course course);
 
     @Mapping(target = "teacherId", ignore = true)
     @Mapping(target = "description", ignore = true)
     @Mapping(target = "format", ignore = true)
-    CourseDTO mapToListDTO(CourseEntity course);
+    CourseDTO mapToListDTO(Course course);
 
-    CourseEntity mapToEntity(CourseDTO courseDTO);
-    CourseEntity mapUpdateDtoToEntity(@MappingTarget CourseEntity courseEntity, CourseDTO clientCourseFullDTO);
+    Course mapToEntity(CourseDTO courseDTO);
+    Course mapUpdateDtoToEntity(@MappingTarget Course courseEntity, CourseDTO clientCourseFullDTO);
 }

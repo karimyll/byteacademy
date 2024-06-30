@@ -1,6 +1,6 @@
 package com.byteacademy.byteacademy.mapper;
 
-import com.byteacademy.byteacademy.dao.entity.StudentEntity;
+import com.byteacademy.byteacademy.dao.entity.Student;
 import com.byteacademy.byteacademy.model.RequestUpdateStudentDTO;
 import com.byteacademy.byteacademy.model.StudentDTO;
 import org.mapstruct.Mapper;
@@ -12,7 +12,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface StudentMapper {
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "roles", ignore = true)
-    StudentDTO mapToResponseDTO(StudentEntity student);
-    StudentEntity mapToEntity(StudentDTO registerStudentDTO);
-    StudentEntity mapToUpdateEntity(@MappingTarget StudentEntity student, RequestUpdateStudentDTO updateStudentDTO);
+    StudentDTO mapToResponseDTO(Student student);
+    Student mapToEntity(StudentDTO registerStudentDTO);
+    Student mapToUpdateEntity(@MappingTarget Student student, RequestUpdateStudentDTO updateStudentDTO);
 }

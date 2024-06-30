@@ -31,7 +31,7 @@ public class CourseController {
         return courseService.getBySlug(slug);
     }
 
-    @GetMapping("/teachers/teacherId/{id}")
+    @GetMapping("/{id}/teachers")
     public List<TeacherDTO> getByCourseId(@PathVariable Long id){
         return teacherService.getByCourseId(id);
     }

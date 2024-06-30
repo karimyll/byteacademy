@@ -1,23 +1,22 @@
 package com.byteacademy.byteacademy.dao.entity;
 
+import com.byteacademy.byteacademy.enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Entity
-@Table(name = "category")
+@Table(name="roles")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryEntity {
+@Builder
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String title;
-    private String slug;
-    @OneToMany(mappedBy = "category")
-    private List<CourseEntity> courses;
+    private Integer id;
+    @Enumerated(EnumType.STRING)
+    private RoleEnum name;
 }

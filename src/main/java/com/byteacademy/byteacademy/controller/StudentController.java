@@ -18,7 +18,7 @@ public class StudentController {
     private final StudentService service;
 
     @GetMapping
-    public Page<StudentDTO> getAllStudents(Pageable pageable, HttpServletRequest request){
+    public Page<StudentDTO> getAll(Pageable pageable, HttpServletRequest request){
         return service.getAllStudents(pageable, request);
     }
 

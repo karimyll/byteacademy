@@ -18,12 +18,12 @@ public class AuthController {
         return authService.authenticate(authRequestDto);
     }
 
-    @DeleteMapping("/delete/{username}")
+    @PutMapping("/disable/{username}")
     public void delete(@PathVariable String username){
         authService.deleteUser(username);
     }
 
-    @DeleteMapping("/enable/{username}")
+    @PutMapping("/enable/{username}")
     public void enable(@PathVariable String username){
         authService.enableUser(username);
     }

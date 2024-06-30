@@ -6,6 +6,7 @@ import com.byteacademy.byteacademy.model.ExceptionDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
@@ -44,8 +45,8 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
+    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        log.error("ActionLog.error validation: {} ", ex.getMessage());
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
@@ -58,14 +59,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionDTO handleGlobal(Exception e){
+        log.error("ActionLog.error : {}", e.getMessage());
         return new ExceptionDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
-    }
-
-    @ExceptionHandler(AuthenticationException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ExceptionDTO handleAuthenticationException(AuthenticationException e){
-        log.error("AuthenticationException ->  {}", e.getMessage());
-        return new ExceptionDTO(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
     }
 
     @ExceptionHandler(BadCredentialsException.class)
@@ -75,6 +70,12 @@ public class GlobalExceptionHandler {
         return new ExceptionDTO(HttpStatus.BAD_REQUEST.value(), e.getMessage());
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionDTO handleIllegalArgumentException(IllegalArgumentException e){
+        log.error("IllegalArgumentException -> {}", e.getMessage());
+        return new ExceptionDTO(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+    }
 
 
 

@@ -32,7 +32,7 @@ public class TeacherController {
         return teacherService.getByUsername(username);
     }
 
-    @GetMapping("/courses/teacherId/{id}")
+    @GetMapping("/{id}/courses")
     public List<CourseDTO> getCoursesByTeacherId(@PathVariable Long id){
         return courseService.getByTeacherId(id);
     }

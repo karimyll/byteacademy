@@ -8,46 +8,46 @@ import org.mapstruct.*;
 public interface CertificateMapper {
 
     @Mapping(target = "enrollment", source = "enrollmentId", qualifiedByName = "toEnrollmentEntity")
-    CertificateEntity mapToEntity(CertificateDTO certificateDTO);
+    Certificate mapToEntity(CertificateDTO certificateDTO);
 
     @Mapping(target = "enrollment" ,ignore = true)
-    CertificateDTO mapToResponse(CertificateEntity certificateEntity);
+    CertificateDTO mapToResponse(Certificate certificateEntity);
 
-    CertificateEntity mapToUpdateEntity(@MappingTarget CertificateEntity certificateEntity, CertificateDTO certificateDTO);
+    Certificate mapToUpdateEntity(@MappingTarget Certificate certificateEntity, CertificateDTO certificateDTO);
 
-    CertificateDTO mapToFullResponse(CertificateEntity certificateEntity);
+    CertificateDTO mapToFullResponse(Certificate certificateEntity);
 
-    default StudentDTO studentEntityToStudentDTO(StudentEntity studentEntity) {
+    default StudentDTO studentEntityToStudentDTO(Student studentEntity) {
         StudentDTO studentDTO = new StudentDTO();
         studentDTO.setName( studentEntity.getName() );
         studentDTO.setSurname( studentEntity.getSurname() );
         return studentDTO;
     }
 
-    default CourseDTO courseEntityToCourseDTO(CourseEntity courseEntity) {
+    default CourseDTO courseEntityToCourseDTO(Course courseEntity) {
         CourseDTO courseDTO = new CourseDTO();
         courseDTO.setTitle( courseEntity.getTitle() );
         return courseDTO;
     }
 
-    default TeacherDTO teacherEntityToTeacherDTO(TeacherEntity teacherEntity) {
+    default TeacherDTO teacherEntityToTeacherDTO(Teacher teacherEntity) {
         TeacherDTO teacherDTO = new TeacherDTO();
         teacherDTO.setName( teacherEntity.getName() );
         teacherDTO.setSurname( teacherEntity.getSurname() );
         return teacherDTO;
     }
 
-    default GroupDTO groupEntityToGroupDTO(GroupEntity groupEntity) {
+    default GroupDTO groupEntityToGroupDTO(Group groupEntity) {
         return new GroupDTO();
     }
 
 
     @Named("toEnrollmentEntity")
-    default EnrollmentEntity toEnrollmentEntity(Long enrollmentId) {
+    default Enrollment toEnrollmentEntity(Long enrollmentId) {
         if (enrollmentId == null) {
             return null;
         }
-        EnrollmentEntity enrollmentEntity = new EnrollmentEntity();
+        Enrollment enrollmentEntity = new Enrollment();
         enrollmentEntity.setId(enrollmentId);
         return enrollmentEntity;
     }

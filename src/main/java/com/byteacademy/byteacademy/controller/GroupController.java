@@ -17,7 +17,7 @@ public class GroupController {
     private final GroupService service;
 
     @GetMapping
-    public Page<GroupDTO> getAllGroups(Pageable pageable, HttpServletRequest request){
+    public Page<GroupDTO> getAll(Pageable pageable, HttpServletRequest request){
         return service.getAllGroups(pageable, request);
     }
 

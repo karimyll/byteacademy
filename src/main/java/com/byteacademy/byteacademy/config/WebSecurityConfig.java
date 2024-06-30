@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -29,20 +30,29 @@ public class WebSecurityConfig {
                         auth
                                 .requestMatchers(permitSwagger).permitAll()
                                 .requestMatchers("/api/v1/auth/login").permitAll()
-                                .requestMatchers("/api/v1/certificates").hasAnyRole(STAFF)
-                                .requestMatchers("/api/v1/certificates/{id}").hasAnyRole(STAFF)
-                                .requestMatchers("/api/v1/certificates/no/{verificationNo}").permitAll()
-                                .requestMatchers(GET, "/api/v1/courses/**").permitAll()
-                                .requestMatchers("/api/v1/courses/**").hasAnyRole(STAFF)
-                                .requestMatchers("/api/v1/enrollments/**").hasAnyRole(STAFF)
+                                .requestMatchers(GET,"/api/v1/applications/**").hasAnyRole(STAFF)
+                                .requestMatchers(PUT,"/api/v1/applications/**").hasAnyRole(STAFF)
+                                .requestMatchers(DELETE,"/api/v1/applications/**").hasAnyRole(STAFF)
+                                .requestMatchers(POST,"/api/v1/applications").permitAll()
+                                .requestMatchers(GET,"/api/v1/certificates").hasAnyRole(STAFF)
+                                .requestMatchers(POST,"/api/v1/certificates").hasAnyRole(STAFF)
+                                .requestMatchers(PUT,"/api/v1/certificates/**").hasAnyRole(STAFF)
+                                .requestMatchers(DELETE,"/api/v1/certificates/**").hasAnyRole(STAFF)
+                                .requestMatchers(GET,"/api/v1/certificates/no/**").permitAll()
+                                .requestMatchers(GET,"/api/v1/courses/**").permitAll()
+                                .requestMatchers(POST,"/api/v1/courses/**").hasAnyRole(STAFF)
+                                .requestMatchers(PUT,"/api/v1/courses/**").hasAnyRole(STAFF)
+                                .requestMatchers(DELETE,"/api/v1/courses/**").hasAnyRole(STAFF)
+                                .requestMatchers("/api/v1/enrollments").hasAnyRole(STAFF)
                                 .requestMatchers("/api/v1/groups").hasAnyRole(STAFF)
-                                .requestMatchers("/api/v1/students").hasAnyRole(STAFF)
-                                .requestMatchers(PUT, "/api/v1/students").hasAnyRole("STAFF", "STUDENT", "ADMIN")
-                                .requestMatchers(GET,"/api/v1/teachers").permitAll()
-                                .requestMatchers(POST,"/api/v1/teachers/**").hasAnyRole(STAFF)
-                                .requestMatchers(PUT,"/api/v1/teachers/**").hasAnyRole("STAFF", "TEACHER", "ADMIN")
-                                .anyRequest().authenticated()
-                )
+                                .requestMatchers("/api/v1/staff").hasAnyRole(STAFF)
+                                .requestMatchers(POST,"/api/v1/students").hasAnyRole(STAFF)
+                                .requestMatchers(GET,"/api/v1/students/**").hasAnyRole(STAFF)
+                                .requestMatchers(PUT, "/api/v1/students/**").hasAnyRole("STUDENT", "STAFF", "ADMIN")
+                                .requestMatchers(GET,"/api/v1/teachers/**").permitAll()
+                                .requestMatchers(POST,"/api/v1/teachers").hasAnyRole(STAFF)
+                                .requestMatchers(PUT,"/api/v1/teachers/**").hasAnyRole(STAFF)
+                                .anyRequest().authenticated())
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint((request, response, authException) ->
                                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED)
@@ -51,29 +61,30 @@ public class WebSecurityConfig {
                                 response.setStatus(HttpServletResponse.SC_FORBIDDEN)
                         )
                 );
+
         http.authenticationProvider(authenticationProvider);
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    protected static String[] TEACHER = {
+    public static String[] TEACHER = {
             "TEACHER",
             "ADMIN"
     };
 
-    protected static String[] STUDENT = {
+    public static String[] STUDENT = {
             "STUDENT",
             "ADMIN"
     };
 
-    protected static String[] STAFF = {
+    public static String[] STAFF = {
             "STAFF",
             "ADMIN"
     };
 
 
-    protected static String[] permitSwagger = {
+    public static String[] permitSwagger = {
             "v3/api-docs/**",
             "v3/api-docs.yaml",
             "swagger-ui/**",

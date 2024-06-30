@@ -1,6 +1,5 @@
 package com.byteacademy.byteacademy.dao.entity;
 
-import com.byteacademy.byteacademy.enums.GenderEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,21 +8,21 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "students")
+@Table(name = "groups")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class StudentEntity {
+@AllArgsConstructor
+public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String surname;
-    private String fatherName;
     @Column(unique = true, nullable = false)
-    private String username;
-    private LocalDate birthDate;
-    @Enumerated(EnumType.STRING)
-    private GenderEnum gender;
+    private Long number;
+    private String name;
+    private LocalDate createdDate;
 
+    @PrePersist
+    protected void onCreate() {
+        this.createdDate = LocalDate.now();
+    }
 }

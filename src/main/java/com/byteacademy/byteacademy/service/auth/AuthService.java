@@ -1,6 +1,6 @@
 package com.byteacademy.byteacademy.service.auth;
 
-import com.byteacademy.byteacademy.dao.entity.UserEntity;
+import com.byteacademy.byteacademy.dao.entity.User;
 import com.byteacademy.byteacademy.dao.repository.UserRepository;
 import com.byteacademy.byteacademy.exception.EntityNotFoundException;
 import com.byteacademy.byteacademy.mapper.UserMapper;
@@ -13,11 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Service
@@ -44,7 +42,7 @@ public class AuthService {
     public AuthenticationDTO authenticate(AuthRequestDTO authRequestDTO) {
         log.info("ActionLog.authenticate.start by: {}", authRequestDTO.getUsername());
 
-        UserEntity user = userRepository.findUserByUsername(authRequestDTO.getUsername())
+        User user = userRepository.findUserByUsername(authRequestDTO.getUsername())
                 .orElseThrow(
                         () -> new BadCredentialsException("INVALID_USERNAME_OR_PASSWORD")
                 );
@@ -56,6 +54,7 @@ public class AuthService {
                             authRequestDTO.getUsername(),
                             authRequestDTO.getPassword()
                     )
+
             );
 
             var jwtToken = jwtService.generateToken(user);
